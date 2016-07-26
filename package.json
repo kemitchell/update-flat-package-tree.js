@@ -1,17 +1,8 @@
 {
   "name": "update-flat-package-tree",
-  "version": "0.0.0",
   "description": "update a flat package dependency tree manifest for a new package version",
+  "version": "0.0.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
-  "repository": "kemitchell/update-flat-package-tree.js",
-  "files": [
-    "index.js"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "test": "node test.js",
-    "lint": "standard"
-  },
   "dependencies": {
     "merge-flat-package-trees": "^1.0.0",
     "semver": "^5.3.0"
@@ -19,5 +10,14 @@
   "devDependencies": {
     "standard": "^7.1.2",
     "tape": "^4.6.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "license": "MIT",
+  "repository": "kemitchell/update-flat-package-tree.js",
+  "scripts": {
+    "lint": "standard",
+    "test": "node test.js"
   }
 }
