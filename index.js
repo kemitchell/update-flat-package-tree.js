@@ -8,11 +8,11 @@ module.exports = function (
   var matched = false
   tree.forEach(function (dependency, dependencyIndex) {
     dependency.links.forEach(function (link, linkIndex) {
-      var isLinkToNewDependency = (
+      var isLinkToUpdatedDependency = (
         link.name === updatedPackageName &&
         semver.satisfies(updatedPackageVersion, link.range)
       )
-      if (isLinkToNewDependency) {
+      if (isLinkToUpdatedDependency) {
         // Set a flag to merge the updated dependency's tree.
         matched = true
         // Splice in a link to the updated dependency.
