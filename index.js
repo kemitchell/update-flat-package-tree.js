@@ -2,7 +2,7 @@ var merge = require('merge-flat-package-trees')
 var semver = require('semver')
 
 module.exports = function (
-  tree, updatedPackageName, updatedPackageVersion, newTree
+  tree, updatedPackageName, updatedPackageVersion, updatedPackageTree
 ) {
   // Insert the new dependency if required.
   var matched = false
@@ -27,7 +27,7 @@ module.exports = function (
   })
 
   if (matched) {
-    merge(tree, newTree)
+    merge(tree, updatedPackageTree)
   }
 
   // Prune orphaned dependencies.
