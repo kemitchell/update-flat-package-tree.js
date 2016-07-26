@@ -1,7 +1,7 @@
 {
   "name": "update-flat-package-tree",
   "version": "0.0.0",
-  "description": "",
+  "description": "update a flat package dependency tree manifest for a new package version",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "repository": "kemitchell/update-flat-package-tree.js",
   "files": [
