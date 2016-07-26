@@ -32,6 +32,75 @@ tape('simple update', function (test) {
   test.end()
 })
 
+tape('direct-dependency update', function (test) {
+  // b@1.0.0
+  // a -> b@^1.0.0
+  // b@1.0.1
+  test.deepEqual(
+    update(
+      [{name: 'b', version: '1.0.0', range: '^1.0.0', links: []}],
+      'b', '1.0.1', [{name: 'b', version: '1.0.1', links: []}]
+    ),
+    [{name: 'b', version: '1.0.1', range: '^1.0.0', links: []}]
+  )
+  test.end()
+})
+
+tape('direct-versus-indirect dependency update', function (test) {
+  // c@1.0.0
+  // b@1.0.0
+  // a -> b@^1.0.0 -> c@^1.0.0 -> b@1.0.x
+  // b@1.1.0 -> c@^1.0.0
+  test.deepEqual(
+    update(
+      [
+        {
+          name: 'b',
+          version: '1.0.0',
+          range: '^1.0.0',
+          links: [{name: 'c', version: '1.0.0', range: '^1.0.0'}]
+        },
+        {
+          name: 'c',
+          version: '1.0.0',
+          links: [{name: 'b', version: '1.0.0', range: '1.0.x'}]
+        }
+      ],
+      'b', '1.1.0',
+      [
+        {
+          name: 'b',
+          version: '1.1.0',
+          links: [{name: 'c', version: '1.0.0', range: '^1.0.0'}]
+        },
+        {name: 'c', version: '1.0.0', links: []}
+      ]
+    ),
+    [
+      // Old b remains.  It is no longer a direct dependency.
+      {
+        name: 'b',
+        version: '1.0.0',
+        links: [{name: 'c', version: '1.0.0', range: '^1.0.0'}]
+      },
+      // New b appears.  It is a direct dependency.
+      {
+        name: 'b',
+        version: '1.1.0',
+        range: '^1.0.0',
+        links: [{name: 'c', version: '1.0.0', range: '^1.0.0'}]
+      },
+      // c remains.
+      {
+        name: 'c',
+        version: '1.0.0',
+        links: [{name: 'b', version: '1.0.0', range: '1.0.x'}]
+      }
+    ]
+  )
+  test.end()
+})
+
 tape('complex update', function (test) {
   // c@1.0.0
   // b@1.0.0

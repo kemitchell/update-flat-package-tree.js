@@ -1,3 +1,4 @@
+var find = require('array-find')
 var merge = require('merge-flat-package-trees')
 var semver = require('semver')
 
@@ -6,7 +7,18 @@ module.exports = function (
 ) {
   // Insert the new dependency if required.
   var matched = false
+  var directDependencyRange = false
   tree.forEach(function (dependency, dependencyIndex) {
+    var isDirectDependency = (
+      dependency.name === updatedPackageName &&
+      dependency.range !== undefined &&
+      semver.satisfies(updatedPackageVersion, dependency.range)
+    )
+    if (isDirectDependency) {
+      matched = true
+      directDependencyRange = dependency.range
+      delete dependency.range
+    }
     dependency.links.forEach(function (link, linkIndex) {
       var isLinkToUpdatedDependency = (
         link.name === updatedPackageName &&
@@ -26,7 +38,20 @@ module.exports = function (
     })
   })
 
+  // If the updated package is linked into the tree, merge the updated
+  // package's dependency tree.
   if (matched) {
+    // If the updated package is a direct dependency in the tree, set
+    // its range property before merging.
+    if (directDependencyRange) {
+      find(updatedPackageTree, function (element) {
+        return (
+          element.name === updatedPackageName &&
+          element.version === updatedPackageVersion
+        )
+      })
+      .range = directDependencyRange
+    }
     merge(tree, updatedPackageTree)
   }
 
