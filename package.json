@@ -1,7 +1,7 @@
 {
   "name": "update-flat-package-tree",
   "description": "update a flat package dependency tree manifest for a new package version",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "dependencies": {
     "merge-flat-package-trees": "^1.0.0",
