@@ -74,6 +74,4 @@ module.exports = function (
       tree.splice(index, 1)
     }
   })
-
-  return tree
 }
