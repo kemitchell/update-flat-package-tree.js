@@ -5,7 +5,7 @@
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "dependencies": {
     "array-find": "^1.0.0",
-    "merge-flat-package-trees": "^1.0.0",
+    "merge-flat-package-trees": "^2.0.0",
     "semver": "^5.3.0"
   },
   "devDependencies": {

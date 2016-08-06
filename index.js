@@ -12,7 +12,7 @@ module.exports = function (
     var isDirectDependency = (
       dependency.name === updatedPackageName &&
       dependency.range !== undefined &&
-      semver.satisfies(updatedPackageVersion, dependency.range)
+      satisfiesRange(updatedPackageVersion, dependency.range)
     )
     if (isDirectDependency) {
       matched = true
@@ -22,7 +22,7 @@ module.exports = function (
     dependency.links.forEach(function (link, linkIndex) {
       var isLinkToUpdatedDependency = (
         link.name === updatedPackageName &&
-        semver.satisfies(updatedPackageVersion, link.range)
+        satisfiesRange(updatedPackageVersion, link.range)
       )
       if (isLinkToUpdatedDependency) {
         // Set a flag to merge the updated dependency's tree.
@@ -75,3 +75,15 @@ module.exports = function (
     }
   })
 }
+
+function satisfiesRange (version, range) {
+  var versionIsSemVer = semver.valid(version) !== null
+  var rangeIsSemVer = semver.validRange(version) !== null
+  /* istanbul ignore else */
+  if (versionIsSemVer && rangeIsSemVer) {
+    return semver.satisfies(version, range)
+  } else {
+    return version === range
+  }
+}
+

@@ -212,3 +212,102 @@ tape('non-dependency noop', function (test) {
     ]
   ])
 })
+
+tape('URL dependency', function (test) {
+  // b@1.0.0 -> c@URL
+  // a -> b@^1.0.0 -> c@URL
+  // b@1.0.1 -> c@URL
+  doUpdate.apply(test, [
+    [
+      {
+        name: 'b',
+        version: '1.0.0',
+        range: '^1.0.0',
+        links: [{name: 'c', version: 'example/c', range: 'example/c'}]
+      },
+      {name: 'c', version: 'example/c', links: []}
+    ],
+    'b', '1.0.1',
+    [
+      {
+        name: 'b',
+        version: '1.0.1',
+        links: [{name: 'c', version: 'example/c', range: 'example/c'}]
+      },
+      {name: 'c', version: 'example/c', links: []}
+    ],
+    [
+      {
+        name: 'b',
+        version: '1.0.1',
+        range: '^1.0.0',
+        links: [{name: 'c', version: 'example/c', range: 'example/c'}]
+      },
+      {name: 'c', version: 'example/c', links: []}
+    ]
+  ])
+})
+
+tape('missing dependency resolved', function (test) {
+  // a -> b@^1.0.0 (missing)
+  // b@1.0.1
+  doUpdate.apply(test, [
+    [{name: 'b', range: '^1.0.0', links: []}],
+    'b', '1.0.1',
+    [{name: 'b', version: '1.0.1', links: []}],
+    [{name: 'b', range: '^1.0.0', version: '1.0.1', links: []}]
+  ])
+})
+
+tape('missing indirect dependency merged in', function (test) {
+  // b@1.0.0
+  // a -> b@^1.0.0
+  // b@1.0.1 -> c@^1.0.0 (missing)
+  doUpdate.apply(test, [
+    [{name: 'b', range: '^1.0.0', version: '1.0.0', links: []}],
+    'b', '1.0.1',
+    [
+      {
+        name: 'b',
+        version: '1.0.1',
+        links: [{name: 'c', range: '^1.0.0', links: []}]
+      }
+    ],
+    [
+      {
+        name: 'b',
+        version: '1.0.1',
+        range: '^1.0.0',
+        links: [{name: 'c', range: '^1.0.0', links: []}]
+      }
+    ]
+  ])
+})
+
+tape('missing indirect dependency merged out', function (test) {
+  // b@1.0.0 -> c@^1.0.0 (missing)
+  // a -> b@^1.0.0 -> c@^1.0.0 (missing)
+  // c@1.0.0
+  doUpdate.apply(test, [
+    [
+      {
+        name: 'b',
+        range: '^1.0.0',
+        version: '1.0.0',
+        links: [{name: 'c', range: '^1.0.0'}]
+      }
+    ],
+    'c', '1.0.0',
+    [{name: 'c', version: '1.0.0', links: []}],
+    [
+      {
+        name: 'b',
+        version: '1.0.0',
+        range: '^1.0.0',
+        links: [{name: 'c', version: '1.0.0', range: '^1.0.0'}]
+      },
+      {name: 'c', version: '1.0.0', links: []}
+    ]
+  ])
+})
+
